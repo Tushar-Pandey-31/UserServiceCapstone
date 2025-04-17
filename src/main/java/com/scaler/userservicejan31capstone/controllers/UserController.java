@@ -1,6 +1,7 @@
 package com.scaler.userservicejan31capstone.controllers;
 
 import com.scaler.userservicejan31capstone.dtos.*;
+import com.scaler.userservicejan31capstone.models.User;
 import com.scaler.userservicejan31capstone.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,17 +9,24 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController
 {
-    UserService userService = new UserService();
+    UserService userService ;
+
+    public UserController(UserService userService)
+    {
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
-    public UserDto signUp(@RequestBody SignUpRequestDto signUpRequestDto)
+    public UserDto signUp(@RequestBody SignupRequestDto signupRequestDto)
     {
-        return null;
+        User user = userService.signup(signupRequestDto.getName() ,
+                signupRequestDto.getEmail(),
+                signupRequestDto.getPassword());
+        return UserDto.from(user);
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto)
-    {
+    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
         return null;
     }
 

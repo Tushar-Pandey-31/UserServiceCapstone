@@ -1,6 +1,11 @@
 package com.scaler.userservicejan31capstone.dtos;
 
-public class SignUpRequestDto
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class SignupRequestDto
 {
     private String name;
     private String email;
