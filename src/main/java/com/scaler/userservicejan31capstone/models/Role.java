@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Role
+public class Role extends Base
 {
     private String value;
 }
