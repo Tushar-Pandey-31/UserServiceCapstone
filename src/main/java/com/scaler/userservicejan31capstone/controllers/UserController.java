@@ -1,25 +1,31 @@
 package com.scaler.userservicejan31capstone.controllers;
 
 import com.scaler.userservicejan31capstone.dtos.*;
+import com.scaler.userservicejan31capstone.models.Token;
 import com.scaler.userservicejan31capstone.models.User;
+import com.scaler.userservicejan31capstone.repositories.TokenRepository;
 import com.scaler.userservicejan31capstone.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+
 public class UserController
 {
+    private final TokenRepository tokenRepository;
     UserService userService ;
 
-    public UserController(UserService userService)
+    public UserController(UserService userService, TokenRepository tokenRepository)
     {
         this.userService = userService;
+        this.tokenRepository = tokenRepository;
     }
 
     @PostMapping("/register")
     public UserDto signUp(@RequestBody SignupRequestDto signupRequestDto)
     {
-        User user = userService.signup(signupRequestDto.getName() ,
+        User user = userService.signUp(signupRequestDto.getName() ,
                 signupRequestDto.getEmail(),
                 signupRequestDto.getPassword());
         return UserDto.from(user);
@@ -27,7 +33,13 @@ public class UserController
 
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
-        return null;
+        Token token = userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+
+        loginResponseDto.setTokenValue(token.getValue());
+        return loginResponseDto;
+
     }
 
     @PostMapping("/logout")
@@ -39,7 +51,19 @@ public class UserController
     @GetMapping("/validate/{token}")
     public ResponseEntity<Boolean> validateToken(@PathVariable("token") String token)
     {
-        return null;
+        User user = userService.validateToken(token);
+        ResponseEntity<Boolean> responseEntity ;
+
+        if(user == null)
+        {
+            responseEntity = new ResponseEntity<>(false,HttpStatus.UNAUTHORIZED);
+        }
+        else
+        {
+            responseEntity = new ResponseEntity<>(true,HttpStatus.OK);
+        }
+        return responseEntity;
+
     }
 
 

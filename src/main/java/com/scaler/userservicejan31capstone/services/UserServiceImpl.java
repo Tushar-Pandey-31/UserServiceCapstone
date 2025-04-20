@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService
@@ -31,12 +30,12 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User signup(String name, String email, String Password) {
+    public User signUp(String name, String email, String password) {
 
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(bCryptPasswordEncoder.encode(Password));
+        user.setPassword(bCryptPasswordEncoder.encode(password));
 
         return userRepository.save(user);
     }
@@ -72,7 +71,15 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public User validateToken(String token) {
-        return null;
+    public User validateToken(String tokenValue)
+    {
+
+        Optional<Token> optionalToken= tokenRepository.findByValueAndDeletedAndExpiryAtGreaterThan(tokenValue, false, new Date());
+        if (optionalToken.isEmpty())
+        {
+            return null;
+        }
+        return optionalToken.get().getUser();
+
     }
 }
