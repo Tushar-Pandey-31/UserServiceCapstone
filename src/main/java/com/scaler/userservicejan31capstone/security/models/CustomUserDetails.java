@@ -1,5 +1,6 @@
 package com.scaler.userservicejan31capstone.security.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.scaler.userservicejan31capstone.models.Role;
 import com.scaler.userservicejan31capstone.models.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@JsonDeserialize
 public class CustomUserDetails implements UserDetails
 {
     String username;
@@ -18,6 +20,8 @@ public class CustomUserDetails implements UserDetails
     boolean credentialsNonExpired;
     boolean enabled;
     List<GrantedAuthority> authorities;
+
+    public CustomUserDetails(){}
 
     public CustomUserDetails(User user)
     {
